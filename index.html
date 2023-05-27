@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
 
-	<title>Self Speehch Synthesis</title>
+	<title>Sefl Speech Synthesis</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<!-- Latest compiled and minified Bootstrap CSS -->
@@ -13,10 +14,570 @@
 
 </head>
 <body>
+
+	
+	
+	
+
+
 	<div class="container">
-		<h1>Coming Soon</h1>
+		<center>
+		<h1>Controllable Speech Synthesis with Iterative Refinement using Self Transformations</h1>
+		<h2><a href="https://selfspeechsynthesis.github.io/demo.html">Interactive Demo</a></h2>
+        </center>
+		<div style="border: 1px solid black; margin-top: 20px; margin-bottom: 10px;"></div>
+		<p>We present audio examples for our paper <i>Controllable Speech Synthesis with Iterative Refinement using Self Transformations</i>. To perform zero-shot voice conversion, we use our synthesis model to combine the content embedding of any given source utterance with the speaker embedding of the target speaker derived from a speaker verification model using 10 seconds of audio of the target speaker. Our synthesizer can perform voice conversion in two modes:</p>
+		<ul>
+			<li><b>Guided:</b> In this setting, the prosody (speaking rate and pitch modulation) of the synthesized speech matches the prosody of the source utterance. To achieve this, we use the ground-truth pitch contour (derived from Yin algorithm) and durations (derived by grouping the content representations) during synthesis.</li>
+			<li><b>Predictive:</b> In this setting, the prosody of the synthesized speech is derived from both the source utterance and target speaker's audio. We predict the normalized pitch contour and durations of SRE embeddings based on both the content and speaker embeddings. </li>
+		</ul>
+		<div style="border-top: 1px solid grey;"></div>
+		<div class="row">
+			<center>
+			<h3>Voice Converstion for Unseen Speakers (Any-to-Any)</h3>
+			</center>
+			<p>
+				To perform voice conversion for speakers not seen during training, we randomly select 10 male and 10 female speakers from the <i>dev-clean</i> subset of the LibriTTS dataset as our target speakers. Next, we choose 10 random source utterances from the remaining speakers and perform voice conversion for each of the 20 speakers. We present a few audio examples for this experiment in the table below. 
+			</p>
+			<table class="table" style="margin-top: 20px;">
+				<thead>
+					<tr>
+						<th>Conversion Type</th>
+						<th>Source Utterance</th>
+						<th>Target Speaker</th>
+						<th><b>Ours (Predictive)</b></th>
+						<th><b>Ours (Guided)</b></th>
+					</tr>
+				</thead>
+				<tbody id = "unseen_speakers" >
+					
+				</tbody>
+			</table>
+		</div>
+		<div style="border-top: 1px solid grey;"></div>
+		<div class="row">
+			<center>
+			<h3>Voice Converstion for Seen Speakers (Many-to-Many)</h3>
+			</center>
+			<p>
+				To perform voice conversion for seen speakers, we use the hold-out utterances of speakers seen during training. Similar to the unseen speaker scenario, we select 10 male and 10 female speakers as the target speakers and choose source utterances from other speakers. 
+			</p>
+			<table class="table" style="margin-top: 20px;">
+				<thead>
+					<tr>
+						<th>Conversion Type</th>
+						<th>Source Utterance</th>
+						<th>Target Speaker</th>
+						<th><b>Ours (Predictive)</b></th>
+						<th><b>Ours (Guided)</b></th>
+					</tr>
+				</thead>
+				<tbody id = "seen_speakers" >
+					
+				</tbody>
+			</table>
+		</div>
+		<div style="border-top: 1px solid grey;"></div>
+		<div class="row">
+			<center>
+			<h3>Comparison Against Past Work (Unseen Speakers)</h3>
+			</center>
+			<p>We present audio examples for the same pair of source and target audio using different voice conversion techniques including our own. We use the <i>Adapt</i> mode for our technique. We produce audio examples for other techniques using the voice convesion inference script provided in the respective github repositories.</p>
+			<table class="table" style="margin-top: 20px;">
+				<thead>
+					<tr>
+						<th>Conversion Type</th>
+						<th>Source Utterance</th>
+						<th>Target Speaker</th>
+						<th><a href="https://github.com/BrightGu/MediumVC">MediumVC</a></th>
+						<th><a href="https://github.com/s3prl/s3prl">S3PRL-VC</a></th>
+						<th><a href="https://github.com/Edresson/YourTTS">YourTTS</a></th>
+						<th><b>Ours</b></th>
+					</tr>
+				</thead>
+				<tbody id = "comparison_table" >
+					
+				</tbody>
+			</table>
+		</div>
+		
+		
+		<div style="border-top: 1px solid grey;"></div>
+		<div class="row">
+			<center>
+			<h3>Expressive source utterances (Unseen speakers)</h3>
+			</center>
+			<p>We present audio examples where source utterances are from expressive/emotional speakers. We use the <a href="https://zenodo.org/record/5117102#.Y2RS6OzMKvg">ADEPT dataset</a> for these examples. The source utterances are from the expressive audio of the two speakers in the dataset. The neutral utterances are used for deriving the speaker embedding. Both the male and female speakers are not seen during training.</p>
+			<table class="table" style="margin-top: 20px;">
+				<thead>
+					<tr>
+						<th>Conversion Type</th>
+						<th>Source Utterance</th>
+						<th>Target Speaker</th>
+						<th><b>Ours (Predictive)</b></th>
+						<th><b>Ours (Guided)</b></th>
+					</tr>
+				</thead>
+				<tbody id = "emotional_speakers" >
+					
+				</tbody>
+			</table>
+		</div>
+
+		<div style="border-top: 1px solid grey;"></div>
+		<div class="row">
+			<center>
+			<h3>Pace Control</h3>
+			</center>
+			<p>
+				Our synthesizer allows control over the pace/duration of the synthesized utterances by changing the target duration for each time-step. We can slow down or speed up the speaking rate and also do more fine-grained control. In the following table we present audio examples for speeding up and slowing down the synthesis utterance.
+			</p>
+			<table class="table" style="margin-top: 20px;">
+				<thead>
+					<tr>
+						<th>Conversion Type</th>
+						<th>Source Utterance</th>
+						<th>Target Speaker</th>
+						<th>Same Pace</th>
+						<th>Fast Pace (1.5 X)</th>
+						<th>Slow Pace (0.7 X)</th>
+					</tr>
+				</thead>
+				<tbody id = "pace_control" >
+					
+				</tbody>
+			</table>
+		</div>
+
+		<div style="border-top: 1px solid grey;"></div>
+		<div class="row">
+			<center>
+			<h3>Pitch Control</h3>
+			</center>
+			<p>
+				Our synthesizer allows control over pitch contour (fundamental frequency) of the synthesized speech. We can perform fine-grained control over the modulation of the pitch contour or simply scale the pitch contour by a factor. In the below table we present audio examples obtained by scaling the reference pitch contour by a factor.
+			</p>
+			<table class="table" style="margin-top: 20px;">
+				<thead>
+					<tr>
+						<th>Conversion Type</th>
+						<th>Source Utterance</th>
+						<th>Target Speaker</th>
+						<th>Same Pitch (1X)</th>
+						<th>Higher Pitch (3X)</th>
+						<th>Lower Pitch (0.5X)</th>
+					</tr>
+				</thead>
+				<tbody id = "pitch_control" >
+					
+				</tbody>
+			</table>
+		</div>
+
+
 	</div>
+	<hr>
+	
 </body>
+	
+	
+	
+<script type="text/javascript">
+
+function fill_audio_table(tbody_id, audio_columns, transcripts, audio_width){
+	var num_rows = audio_columns[0].length;
+	var base_url = "https://expressivecloning.s3.us-east-2.amazonaws.com/aceweb/"
+	for(var ridx=0; ridx < num_rows; ridx++){
+		var tr_string = "<tr>";
+		for(var cidx=0; cidx < audio_columns.length; cidx++){
+			if(cidx > 0){
+				var audio_url = audio_columns[cidx][ridx];
+				if(!audio_url.startsWith("audio/") ){
+					audio_url = base_url + audio_columns[cidx][ridx];	
+				}
+				tr_string += '<td><audio class="class_audio" controls="" style="width:'+ audio_width +'px; text-align: center;"><source src="' + audio_url + '" type="audio/wav">Your browser does not support the audio tag</audio>';
+				if(cidx == 1){
+					tr_string += '<details><summary style="cursor: pointer; color: #76b900;">[Show transcript]</summary>' + transcripts[ridx] + '</details>'
+				}
+				tr_string += '</td>';
+				
+			}
+			else{
+				tr_string += '<td style="white-space: nowrap; text-align: left">' + audio_columns[cidx][ridx] + '</td>';
+			}
+		}
+		tr_string += "</tr>";
+		$("#" + tbody_id).append(tr_string);
+	}
+	
+}
+
+function fill_audio_table_comparison(tbody_id, audio_columns, transcripts, audio_width){
+	var num_rows = audio_columns[0].length;
+	var base_url = "https://expressivecloning.s3.us-east-2.amazonaws.com/aceweb/"
+	for(var ridx=0; ridx < num_rows; ridx++){
+		var tr_string = "<tr>";
+		for(var cidx=0; cidx < audio_columns.length; cidx++){
+			if(cidx >= 3){
+				base_url = "https://expressivecloning.s3.us-east-2.amazonaws.com/sslttsamt/"
+			}
+			else{
+				base_url = "https://expressivecloning.s3.us-east-2.amazonaws.com/aceweb/"
+			}
+
+			if(cidx > 0){
+				var audio_url = base_url + audio_columns[cidx][ridx];
+				tr_string += '<td><audio class="class_audio" controls="" style="width:'+ audio_width +'px; text-align: center;"><source src="' + audio_url + '" type="audio/wav">Your browser does not support the audio tag</audio>';
+				if(cidx == 1){
+					tr_string += '<details><summary style="cursor: pointer; color: #76b900;">[Show transcript]</summary>' + transcripts[ridx] + '</details>'
+				}
+				tr_string += '</td>';
+				
+			}
+			else{
+				tr_string += '<td style="white-space: nowrap; text-align: left">' + audio_columns[cidx][ridx] + '</td>';
+			}
+			
+		}
+		tr_string += "</tr>";
+		$("#" + tbody_id).append(tr_string);
+	}
+	
+}
+
+var comparison_types_unseen = [
+	"Male to Female",
+	"Female to Female",
+	"Female to Male",
+	"Male to Male",
+]
+
+var unseen_transcripts = [
+	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
+	"When quite crisp, they are ready for use.",
+	"Various dishes are frequently ornamented and garnished with its graceful leaves and these are sometimes boiled in soups. Although it is more usually confined to English cookery...",
+	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
+]
+
+var source_utterances_unseen = [
+	"source_0.wav",
+	"source_2.wav",
+	"source_3.wav",
+	"source_0.wav",
+];
+var target_utterances_unseen = [
+	"targetspeaker_7_0.wav",
+	"targetspeaker_29_0.wav",
+	"targetspeaker_11_0.wav",
+	"targetspeaker_27_0.wav",
+];
+
+var mimic_utterances_unseen = [
+	"unseen_mimic_0_TO_7.wav",
+	"unseen_mimic_2_TO_29.wav",
+	"unseen_mimic_3_TO_11.wav",
+	"unseen_mimic_0_TO_27.wav",
+]
+
+var adapt_utterances_unseen = [
+	"unseen_pitchadapt_0_TO_7.wav",
+	"unseen_pitchadapt_2_TO_29.wav",
+	"unseen_pitchadapt_3_TO_11.wav",
+	"unseen_pitchadapt_0_TO_27.wav",
+]
+
+var unseen_columns = [
+	comparison_types_unseen,
+	source_utterances_unseen,
+	target_utterances_unseen,
+	adapt_utterances_unseen,
+	mimic_utterances_unseen,
+]
+
+
+var comparison_types_seen = [
+	"Male to Female",
+	"Female to Female",
+	"Female to Male",
+	"Female to Male",
+	"Male to Male",
+]
+
+var seen_transcripts = [
+	"I am convinced that it is as natural for a human being to swim as it is for a duck.",
+	"Here lived Las Casas, a priest who was the Indians' greatest champion in the early days and who was said to be the father of African slavery in the new world.",
+	"Here lived Las Casas, a priest who was the Indians' greatest champion in the early days and who was said to be the father of African slavery in the new world.",
+	"Shoot him through the right elbow if he makes one sour move.",
+	"This is quite sudden said the scare crow.",
+]
+
+var source_utterances_seen = [
+	"source_605.wav",
+	"source_281.wav",
+	"source_281.wav",
+	"source_576.wav",
+	"source_302.wav"
+]
+
+var target_utterances_seen = [
+	"targetspeaker_802_0.wav",
+	"targetspeaker_442_0.wav",
+	"targetspeaker_324_0.wav",
+	"targetspeaker_294_0.wav",
+	"targetspeaker_476_0.wav"
+]
+
+
+var mimic_utterances_seen = [
+	"seen_mimic_605_TO_802.wav",
+	"seen_mimic_281_TO_442.wav",
+	"seen_mimic_281_TO_324.wav",
+	"seen_mimic_576_TO_294.wav",
+	"seen_mimic_302_TO_476.wav"
+]
+
+var adapt_utterances_seen = [
+	"seen_pitchadapt_605_TO_802.wav",
+	"seen_pitchadapt_281_TO_442.wav",
+	"seen_pitchadapt_281_TO_324.wav",
+	"seen_pitchadapt_576_TO_294.wav",
+	"seen_pitchadapt_302_TO_476.wav"
+]
+
+
+var seen_columns = [
+	comparison_types_seen,
+	source_utterances_seen,
+	target_utterances_seen,
+	adapt_utterances_seen,
+	mimic_utterances_seen,
+]
+
+var comparison_types = [
+	"Male to Female",
+	"Male to Female",
+	"Female to Male",
+	"Female to Male"
+]
+
+var comparison_transcripts = [
+	"What then must be the state of the less known and more distant parts of the island.",
+	"The Sacred Lock of Hair. Reincarnation and the Converse of Spirits.",
+	"When quite crisp, they are ready for use.",
+	"Randall decided on leaving her"
+]
+var source_utterances_comparison = [
+	"source_8.wav",
+	"source_1.wav",
+	"source_2.wav",
+	"source_7.wav"
+
+]
+
+var target_utterances_comparison = [
+	"targetspeaker_16_0.wav",
+	"targetspeaker_8_0.wav",
+	"targetspeaker_11_0.wav",
+	"targetspeaker_11_0.wav"
+]
+
+var yourtts_comparison = [
+	"yourtts_unseen_32_source_8_targetspeaker_16_0.wav",
+	"yourtts_unseen_185_source_1_targetspeaker_8_0.wav",
+	"yourtts_unseen_0_source_2_targetspeaker_11_0.wav",
+	"yourtts_unseen_143_source_7_targetspeaker_11_0.wav"
+]
+
+var fragment_comparison = [
+	"medium_unseen_91_source_8TOtargetspeaker_16_0_generated_e2e.wav",
+	"medium_unseen_84_source_1TOtargetspeaker_8_0_generated_e2e.wav",
+	"medium_unseen_74_source_2TOtargetspeaker_11_0_generated_e2e.wav",
+	"medium_unseen_194_source_7TOtargetspeaker_11_0_generated_e2e.wav",
+]
+
+var s2vc_comparison = [
+	"s2vc_unseen_32_source_8_targetspeaker_16_0.wav",
+	"s2vc_unseen_185_source_1_targetspeaker_8_0.wav",
+	"s2vc_unseen_0_source_2_targetspeaker_11_0.wav",
+	"s2vc_unseen_143_source_7_targetspeaker_11_0.wav"
+]
+
+var ours_comparison = [
+	"ours_unseen_135_swapped_source_16_8.wav",
+	"ours_unseen_44_swapped_source_8_1.wav",
+	"ours_unseen_182_swapped_source_11_2.wav",
+	"ours_unseen_120_swapped_source_11_7.wav"
+]
+
+var comparison_columns = [
+	comparison_types,
+	source_utterances_comparison,
+	target_utterances_comparison,
+	fragment_comparison,
+	s2vc_comparison,
+	yourtts_comparison,
+	ours_comparison
+]
+
+
+
+fill_audio_table("unseen_speakers", unseen_columns,unseen_transcripts, 250)
+fill_audio_table("seen_speakers", seen_columns, seen_transcripts, 250)
+fill_audio_table_comparison("comparison_table", comparison_columns, comparison_transcripts, 170)
+
+var transcripts_emotional = [
+	"The leaves are changing colors.",
+	"This report is due tomorrow.",
+	"She is being fired.",
+	"Look at that puppy",
+]
+
+var emptional_types = [
+	"Male to Female",
+	"Male to Female",
+	"Female to Male",
+	"Female to Male",
+]
+var source_emptional = [
+	'audio/fear_ad01_0000.wav',
+	'audio/anger_ad01_0002.wav',
+	'audio/anger_ad00_0000.wav',
+	'audio/anger_ad00_0003.wav'
+]
+
+var target_emotional = [
+	'audio/neutral_ad00_0002.wav',
+	'audio/neutral_ad00_0002.wav',
+	'audio/neutral_ad01_0004.wav',
+	'audio/neutral_ad01_0004.wav',
+]
+
+var adapt_emotional = [
+	'audio/src_ad01_0000_fear_trg_neutral_ad00_pitch_adapt.wav',
+	'audio/src_ad01_0002_anger_trg_neutral_ad00_pitch_adapt.wav',
+	'audio/src_ad00_0000_anger_trg_neutral_ad01_pitch_adapt.wav',
+	'audio/src_ad00_0003_anger_trg_neutral_ad01_pitch_adapt.wav'
+]
+
+var mimic_emptional = [
+	'audio/src_ad01_0000_fear_trg_neutral_ad00_mimic.wav',
+	'audio/src_ad01_0002_anger_trg_neutral_ad00_mimic.wav',
+	'audio/src_ad00_0000_anger_trg_neutral_ad01_mimic.wav',
+	'audio/src_ad00_0003_anger_trg_neutral_ad01_mimic.wav'
+]
+
+var emotional_columns = [
+	emptional_types,
+	source_emptional,
+	target_emotional,
+	adapt_emotional,
+	mimic_emptional
+]
+
+
+
+fill_audio_table("emotional_speakers", emotional_columns, transcripts_emotional, 250)
+
+
+var control_types = [
+	"Male to Female",
+	"Female to Male",
+]
+
+var source_pace_control = [
+	'source_0.wav',
+	'source_3.wav',
+]
+
+var target_pace_control = [
+	"targetspeaker_7_0.wav",
+	"targetspeaker_11_0.wav"
+]
+
+var normal_pace_control = [
+	'audio/ControlExpFinal/0_to_7_normal.wav',
+	'audio/ControlExpFinal/3_to_11_normal.wav',
+]
+
+var fast_pace_control = [
+	'audio/ControlExpFinal/0_to_7_pace1.5.wav',
+	'audio/ControlExpFinal/3_to_11_pace1.5.wav',
+]
+
+var slow_pace_control = [
+	'audio/ControlExpFinal/0_to_7_pace0.7.wav',
+	'audio/ControlExpFinal/3_to_11_pace0.7.wav',
+]
+
+
+var pace_control_columns = [
+	control_types,
+	source_pace_control,
+	target_pace_control,
+	normal_pace_control,
+	fast_pace_control,
+	slow_pace_control,
+]
+
+var transcripts_pace_control = [
+	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
+	"Various dishes are frequently ornamented and garnished with its graceful leaves and these are sometimes boiled in soups. Although it is more usually confined to English cookery...",
+]
+
+fill_audio_table("pace_control", pace_control_columns, transcripts_pace_control, 200)
+
+
+var pitch_control_types = [
+	"Female to Male",
+	"Male to Female",
+]
+
+var source_pitch_control = [
+	'source_3.wav',
+	'source_0.wav',
+]
+
+var target_pitch_control = [
+	"targetspeaker_11_0.wav",
+	"targetspeaker_7_0.wav",
+]
+
+var normal_pitch_control = [
+	'audio/ControlExpFinal/3_to_11_normal.wav',
+	'audio/ControlExpFinal/0_to_7_normal.wav',
+]
+
+
+var high_pitch_control = [
+	'audio/ControlExpFinal/3_to_11_pitch3.0.wav',
+	'audio/ControlExpFinal/0_to_7_pitch3.0.wav',
+	
+]
+
+var low_pitch_control = [
+	'audio/ControlExpFinal/3_to_11_pitch0.5.wav',
+	'audio/ControlExpFinal/0_to_7_pitch0.5.wav',
+]
+
+var pitch_control_columns = [
+	pitch_control_types,
+	source_pitch_control,
+	target_pitch_control,
+	normal_pitch_control,
+	high_pitch_control,
+	low_pitch_control,
+]
+
+var transcripts_pace_control = [
+	"Various dishes are frequently ornamented and garnished with its graceful leaves and these are sometimes boiled in soups. Although it is more usually confined to English cookery...",
+	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
+	
+]
+
+fill_audio_table("pitch_control", pitch_control_columns, transcripts_pace_control, 200)
+
+
+</script>	
 
 
 </html>
