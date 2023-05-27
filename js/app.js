@@ -6,7 +6,7 @@ var api_address = "https://scevcplusplus.ngrok.app";
 // var api_address = "http://localhost:5000";
 var session_key = "test_session";
 var _testing = false;
-var loader_gif = '<img src="gifs/loader.gif" style="width: 50px; height: 50px;">';
+var loader_gif = '<img src="https://selfspeechsynthesis.github.io/gifs/loader.gif" style="width: 50px; height: 50px;">';
 
 
 var gumStream;                      //stream from getUserMedia()
