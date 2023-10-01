@@ -298,7 +298,7 @@ function fill_celebrity_table(tbody_id, audio_columns, transcripts, audio_width)
 			if(cidx >= 0 && cidx < audio_columns.length - 1){
 				var audio_url = audio_columns[cidx][ridx];
 				// Align audio center vertically
-				tr_string += '<td><audio class="class_audio" controls="" style="width:'+ audio_width +'px; text-align: center; vertical-align: center;"><source src="' + audio_url + '" type="audio/wav">Your browser does not support the audio tag</audio>';
+				tr_string += '<td><audio class="class_audio" controls="" style="width:'+ audio_width +'px; margin-top: 50px; text-align: center; vertical-align: center;"><source src="' + audio_url + '" type="audio/wav">Your browser does not support the audio tag</audio>';
 				if(cidx == 1 && transcripts.length > 0){
 					tr_string += '<details><summary style="cursor: pointer; color: #76b900;">[Show transcript]</summary>' + transcripts[ridx] + '</details>'
 				}
@@ -332,10 +332,7 @@ var source_names = [
 ]
 
 var unseen_transcripts = [
-	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
-	"When quite crisp, they are ready for use.",
-	"Various dishes are frequently ornamented and garnished with its graceful leaves and these are sometimes boiled in soups. Although it is more usually confined to English cookery...",
-	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
+	
 ]
 
 var target_names = [
@@ -402,10 +399,7 @@ var comparison_types = [
 ]
 
 var comparison_transcripts = [
-	"dummy",
-	"dummy",
-	"dummy",
-	"dummy",
+	
 ]
 
 var source_paths = [];
@@ -623,8 +617,6 @@ var control_columns = [
 ]
 
 var transcripts_pace_control = [
-	"Various dishes are frequently ornamented and garnished with its graceful leaves and these are sometimes boiled in soups. Although it is more usually confined to English cookery...",
-	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
 	
 ]
 
@@ -659,14 +651,20 @@ fill_audio_table("pitch_control", control_columns, transcripts_pace_control, 200
 
 var celeb_sources = [
 	"audio/celeb_source1.wav",
+	"audio/celeb_source2.wav",
+	"audio/celeb_source3.wav",
 ]
 
 var celeb_targets = [
 	"audio/celeb_target1.wav",
+	"audio/celeb_target2.wav",
+	"audio/celeb_target3.wav",
 ]
 
 var celeb_videos = [
 	"audio/celeb_video1.mp4",
+	"audio/celeb_video2.mp4",
+	"audio/celeb_video3.mp4",
 ]
 
 var celebrity_columns = [
