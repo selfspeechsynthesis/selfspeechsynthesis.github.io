@@ -263,7 +263,7 @@
      // }
      var xhr=new XMLHttpRequest();
      loader_gif + ""
-     var loading_content = "<center>" + loader_gif + " Converted audio is ready in the table above. Generating video avatar... This can take upto 30 seconds. </center>";
+     var loading_content = "<center>" + loader_gif + " Converted audio is ready. Generating video avatar... This can take upto 30 seconds. </center>";
      $("#videoContainer").html(loading_content);
      xhr.onload=function(e) {
          if(this.readyState === 4) {
@@ -316,7 +316,7 @@
                      $("#audioContainer").html("Voice Converted Audio: " + audio_html);
                      // $("#convertedAudioTd_" + rn).html(audio_html);
                  }
-                 // get_avatar();
+                 get_avatar();
              }
          }
          makeUploadButtonActive();
