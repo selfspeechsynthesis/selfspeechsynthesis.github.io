@@ -8,30 +8,33 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<!-- Latest compiled and minified Bootstrap CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="style_examples.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 </head>
 <body>
-
-	
-	
-	
-
-
 	<div class="container">
 		
 		<h1>SelfVC: Voice Conversion With Iterative Refinement using Self Transformations</h1>
-		<h3><a href="https://selfspeechsynthesis.github.io/demo.html">Interactive Demo</a></h3>
+		<h4><a href="/demo.html" target="_blank"><i class="fas fa-external-link-alt"></i> Interactive Demo</a></h4>
         
 		<!-- <div style="border: 1px solid black; margin-top: 20px; margin-bottom: 10px;"></div> -->
 		<div style="border-top: 1px solid grey; margin-top: 20px; margin-bottom: 10px;"></div>
 
-		<p>We present audio examples for our paper <i>SelfVC: Voice Conversion With Iterative Refinement using Self Transformations</i>. To perform zero-shot voice conversion, we use our synthesis model to combine the content embedding of any given source utterance with the speaker embedding of the target speaker derived from a speaker verification model using 10 seconds of audio of the target speaker. Our synthesizer can perform voice conversion in two modes:</p>
+		<p>We present audio examples for our paper <i>SelfVC: Voice Conversion With Iterative Refinement using Self Transformations</i>. 
+			To perform zero-shot voice conversion, we use our synthesis model to combine the content embedding 
+			of any given source utterance with the speaker embedding of the target speaker derived from a speaker verification 
+			model using 10 seconds of audio of the target speaker. Our synthesizer can perform voice conversion in two modes:</p>
 		<ul>
-			<li><b>Guided:</b> In this setting, the prosody (speaking rate and pitch modulation) of the synthesized speech matches the prosody of the source utterance. To achieve this, we use the ground-truth pitch contour (derived from Yin algorithm) and durations (derived by grouping the content representations) during synthesis.</li>
-			<li><b>Predictive:</b> In this setting, the prosody of the synthesized speech is derived from both the source utterance and target speaker's audio. We predict the normalized pitch contour and durations of SRE embeddings based on both the content and speaker embeddings. </li>
+			<li><b>Guided:</b> In this setting, the prosody (speaking rate and pitch modulation) of the synthesized speech matches closely with the prosody of the source utterance. 
+				To achieve, this the ground-truth duration and normalized F0 contour of the source utterance are used as intermediate inputs in the mel-spectrogram synthesizer.
+				<!-- To achieve this, we use the ground-truth pitch contour (derived from Yin algorithm) and durations (derived by grouping the content representations) during synthesis.</li> -->
+			<li><b>Predictive:</b> In this setting, the prosody of the synthesized speech is adapted based on the target speaker's audio. That is,
+				we predict the normalized F0 contour and durations based on on both the content and speaker embeddings, using the duration and pitch predictor in the synthesis model.</li>
 		</ul>
 		<div style="border-top: 1px solid grey;"></div>
 		<div class="row">
@@ -39,7 +42,9 @@
 			<h3>Zero-shot Any-to-Any Voice Convesion</h3>
 			
 			<p>
-				To perform voice conversion for speakers not seen during training, we randomly select 10 male and 10 female speakers from the <i>test-clean</i> subset of the LibriTTS dataset as our target speakers. Next, we choose 10 random source utterances from the remaining speakers and perform voice conversion for each of the 20 speakers. We present a few audio examples for this experiment in the table below. 
+				For zero-shot any-to-any voice convrsion, we select 10 target speakers (5 random Male and 5 random Female)
+				from the <i>test-clean</i> subset of the LibriTTS dataset. Next, we randomly select 20 source utterances from the remaining
+				speakers and perform voice conversion for each of the 10 target speakers. We present a few audio examples for this experiment in the table below.
 			</p>
 			<table class="table" style="margin-top: 20px;">
 				<thead>
@@ -47,8 +52,8 @@
 						<th>Conversion Type</th>
 						<th>Source Utterance</th>
 						<th>Target Speaker</th>
-						<th><b>SelfVC (Predictive)</b></th>
-						<th><b>SelfVC (Guided)</b></th>
+						<th><b>Ours - SelfVC (Predictive)</b></th>
+						<th><b>Ours - SelfVC (Guided)</b></th>
 					</tr>
 				</thead>
 				<tbody id = "unseen_speakers" >
@@ -57,48 +62,28 @@
 			</table>
 		</div>
 		
-		<!-- 
 		<div style="border-top: 1px solid grey;"></div>
 		<div class="row">
-			<center>
-			<h3>Voice Converstion for Seen Speakers (Many-to-Many)</h3>
-			</center>
-			<p>
-				To perform voice conversion for seen speakers, we use the hold-out utterances of speakers seen during training. Similar to the unseen speaker scenario, we select 10 male and 10 female speakers as the target speakers and choose source utterances from other speakers. 
-			</p>
+			
+			<h3>Comparison Against Past Work</h3>
+			
+			<p>We present audio examples for the same pair of source and target audio using different voice conversion techniques including our own. 
+				The source uttreances and target speakers are selected from the test-clean LibriTTS in the same way as described above for 
+				zero-shot any-to-any voice conversion.
+				In this setting, we use the predictive mode for pitch and guided mode for duration to ensure a fair comparison since previous techniques 
+				preserve the duration of the source utterance.
+				We produce audio examples for prior techniques using the voice convesion inference script provided in the respective official github repositories.</p>
 			<table class="table" style="margin-top: 20px;">
 				<thead>
 					<tr>
 						<th>Conversion Type</th>
 						<th>Source Utterance</th>
 						<th>Target Speaker</th>
-						<th><b>SelfVC (Predictive)</b></th>
-						<th><b>SelfVC (Guided)</b></th>
-					</tr>
-				</thead>
-				<tbody id = "seen_speakers" >
-					
-				</tbody>
-			</table>
-		</div>
-		 -->
-
-		<div style="border-top: 1px solid grey;"></div>
-		<div class="row">
-			
-			<h3>Comparison Against Past Work (Unseen Speakers)</h3>
-			
-			<p>We present audio examples for the same pair of source and target audio using different voice conversion techniques including our own. We use the <i>Adapt</i> mode for our technique. We produce audio examples for other techniques using the voice convesion inference script provided in the respective github repositories.</p>
-			<table class="table" style="margin-top: 20px;">
-				<thead>
-					<tr>
-						<th>Conversion Type</th>
-						<th>Source Utterance</th>
-						<th>Target Speaker</th>
-						<th><a href="https://github.com/BrightGu/MediumVC">MediumVC</a></th>
-						<th><a href="https://github.com/s3prl/s3prl">S3PRL-VC</a></th>
-						<th><a href="https://github.com/Edresson/YourTTS">YourTTS</a></th>
-						<th><b>Ours</b></th>
+						<th><a href="https://arxiv.org/abs/2110.02500">MediumVC</a></th>
+						<th><a href="https://arxiv.org/abs/2110.06280">S3PRL-VC</a></th>
+						<th><a href="https://arxiv.org/abs/2112.02418">YourTTS</a></th>
+						<th><a href="https://arxiv.org/abs/2302.08137">ACE-VC</a></th>
+						<th><b>Ours - SelfVC</b></th>
 					</tr>
 				</thead>
 				<tbody id = "comparison_table" >
@@ -113,82 +98,70 @@
 			<h3>Cross Lingual Voice Conversion</h3>
 			
 			<p>
-				To perform voice conversion for speakers not seen during training, we randomly select 10 male and 10 female speakers from the <i>test-clean</i> subset of the LibriTTS dataset as our target speakers. Next, we choose 10 random source utterances from the remaining speakers and perform voice conversion for each of the 20 speakers. We present a few audio examples for this experiment in the table below. 
+				For Cross lingual voice conversion, we use the CSS10 dataset that contains utterances from 10 different languages 
+				(Chinese, Greek, Finnish, Spanish, Dutch, German, Japanese, French, Hungarian, Russian). We consider three voice conversion tasks:
+				English to CSS10, CSS10 to English, and CSS10 to CSS10. We present voice converted examples from two of our models: 1) SelfVC (LibriTTS) which is 
+				trained only on English speech from train-clean-360 subset of LibriTTS. 2) SelfVC (LibriTTS + CSS10) which is finetuned on both English and CSS10 speech.
 			</p>
-			<h4>English To CSS10</h4>
-			<table class="table" style="margin-top: 10px; margin-bottom: 20px;">
-				<thead>
-					<tr>
-						<th>Conversion Type</th>
-						<th>Source Utterance (English) </th>
-						<th>Target Speaker (CSS10)</th>
-						<th><b>Ours - SelfVC (LibriTTS)</b></th>
-						<th><b>Ours - SelfVC (LibriTTS + CSS10)</b></th>
-					</tr>
-				</thead>
-				<tbody id = "crosslingual_englishTocss10" >
-					
-				</tbody>
-			</table>
-
-			<h4>CSS10 To English</h4>
-			<table class="table" style="margin-top: 10px; margin-bottom: 20px;">
-				<thead>
-					<tr>
-						<th>Conversion Type</th>
-						<th>Source Utterance (CSS10)</th>
-						<th>Target Speaker (English) </th>
-						<th><b>Ours - SelfVC (LibriTTS)</b></th>
-						<th><b>Ours - SelfVC (LibriTTS + CSS10)</b></th>
-					</tr>
-				</thead>
-				<tbody id = "crosslingual_css10Toenglish" >
-					
-				</tbody>
-			</table>
-
-			<h4>CSS10 To CSS10</h4>
-			<table class="table" style="margin-top: 10px; margin-bottom: 20px;">
-				<thead>
-					<tr>
-						<th>Conversion Type</th>
-						<th>Source Utterance (CSS10)</th>
-						<th>Target Speaker (CSS10)</th>
-						<th><b>Ours - SelfVC (LibriTTS)</b></th>
-						<th><b>Ours - SelfVC (LibriTTS + CSS10)</b></th>
-					</tr>
-				</thead>
-				<tbody id = "crosslingual_css10Tocss10" >
-					
-				</tbody>
-			</table>
 
 
+			<ul class="nav nav-tabs">
+				<li class="active"><a data-toggle="tab" href="#tab1">CSS10 (Multilingual Source) To English</a></li>
+				<li><a data-toggle="tab" href="#tab2">English To CSS10 (Multilingual Speaker)</a></li>
+				<li><a data-toggle="tab" href="#tab3">CSS10 (Multilingual Source) To CSS10 (Multilingual Speaker)</a></li>
+			</ul>
+			
+			<div class="tab-content">
+			<div id="tab1" class="tab-pane fade in active">
+				<table class="table" style="margin-top: 10px; margin-bottom: 20px;">
+					<thead>
+						<tr>
+							<th>Conversion Type</th>
+							<th>Source Utterance (CSS10)</th>
+							<th>Target Speaker (English) </th>
+							<th><b>Ours - SelfVC (LibriTTS)</b></th>
+							<th><b>Ours - SelfVC (LibriTTS + CSS10)</b></th>
+						</tr>
+					</thead>
+					<tbody id = "crosslingual_css10Toenglish" >
+						
+					</tbody>
+				</table>
+			</div>
+			<div id="tab2" class="tab-pane fade">
+				<table class="table" style="margin-top: 10px; margin-bottom: 20px;">
+					<thead>
+						<tr>
+							<th>Conversion Type</th>
+							<th>Source Utterance (English) </th>
+							<th>Target Speaker (CSS10)</th>
+							<th><b>Ours - SelfVC (LibriTTS)</b></th>
+							<th><b>Ours - SelfVC (LibriTTS + CSS10)</b></th>
+						</tr>
+					</thead>
+					<tbody id = "crosslingual_englishTocss10" >
+						
+					</tbody>
+				</table>
+			</div>
+			<div id="tab3" class="tab-pane fade">
+				<table class="table" style="margin-top: 10px; margin-bottom: 20px;">
+					<thead>
+						<tr>
+							<th>Conversion Type</th>
+							<th>Source Utterance (CSS10)</th>
+							<th>Target Speaker (CSS10)</th>
+							<th><b>Ours - SelfVC (LibriTTS)</b></th>
+							<th><b>Ours - SelfVC (LibriTTS + CSS10)</b></th>
+						</tr>
+					</thead>
+					<tbody id = "crosslingual_css10Tocss10" >
+						
+					</tbody>
+				</table>
+			</div>
+			</div>
 		</div>
-
-		<!-- 
-		<div style="border-top: 1px solid grey;"></div>
-		<div class="row">
-			<center>
-			<h3>Expressive source utterances (Unseen speakers)</h3>
-			</center>
-			<p>We present audio examples where source utterances are from expressive/emotional speakers. We use the <a href="https://zenodo.org/record/5117102#.Y2RS6OzMKvg">ADEPT dataset</a> for these examples. The source utterances are from the expressive audio of the two speakers in the dataset. The neutral utterances are used for deriving the speaker embedding. Both the male and female speakers are not seen during training.</p>
-			<table class="table" style="margin-top: 20px;">
-				<thead>
-					<tr>
-						<th>Conversion Type</th>
-						<th>Source Utterance</th>
-						<th>Target Speaker</th>
-						<th><b>Ours (Predictive)</b></th>
-						<th><b>Ours (Guided)</b></th>
-					</tr>
-				</thead>
-				<tbody id = "emotional_speakers" >
-					
-				</tbody>
-			</table>
-		</div>
-		-->
 
 		<div style="border-top: 1px solid grey;"></div>
 		<div class="row">
@@ -197,46 +170,88 @@
 			
 			<p>
 				Besides the above two inference modes (guided and predictive), SelfVC also offers fine-grained control over the prosody of the synthesized speech.
-				During inference, we can simply modify the pitch contour and duration of the source utterance to control the prosody of the synthesized speech. 
-				We present audio examples obtained by scaling the reference pitch contour and duration by a factor. This behaviour is similar to ACE-VC, except 
-				that we do not require any transcriptions during training to train our duration predictor.
+				During inference, we can simply modify the pitch contour (normalized F0 Contour) and extracted duration of the source utterance 
+				to control the prosody of the synthesized speech. 
+				We present audio examples obtained by scaling the reference pitch contour and duration by a factor. 
+				This behaviour is similar to ACE-VC, except that we do not require any text transcriptions during training to extract duration targets 
+				for the duration predictor.
 			</p>
-
-			<h4>Pace Control</h4>
-			<table class="table" style="margin-top: 10px; margin-bottom: 30px">
-				<thead>
-					<tr>
-						<th>Conversion Type</th>
-						<th>Source Utterance</th>
-						<th>Target Speaker</th>
-						<th>Same Pace</th>
-						<th>Fast Pace (1.5 X)</th>
-						<th>Slow Pace (0.7 X)</th>
-					</tr>
-				</thead>
-				<tbody id = "pace_control" >
-					
-				</tbody>
-			</table>
-
-			<h4>Pitch Control</h4>
+			
+			<ul class="nav nav-tabs">
+				<li class="active"><a data-toggle="tab" href="#tabPace">Pace Control</a></li>
+				<li><a data-toggle="tab" href="#tabPitch">Pitch Control</a></li>
+			</ul>
+			
+			<div class="tab-content">
+				<div id="tabPace" class="tab-pane fade in active">
+					<table class="table" style="margin-top: 10px; margin-bottom: 30px">
+						<thead>
+							<tr>
+								<th>Conversion Type</th>
+								<th>Source Utterance</th>
+								<th>Target Speaker</th>
+								<th>Same Pace</th>
+								<th>Fast Pace (1.5 X)</th>
+								<th>Slow Pace (0.7 X)</th>
+							</tr>
+						</thead>
+						<tbody id = "pace_control" >
+							
+						</tbody>
+					</table>
+				</div>
+				<div id="tabPitch" class="tab-pane fade">
+					<table class="table" style="margin-top: 20px;">
+						<thead>
+							<tr>
+								<th>Conversion Type</th>
+								<th>Source Utterance</th>
+								<th>Target Speaker</th>
+								<th>Same Pitch (1X)</th>
+								<th>Higher Pitch (3X)</th>
+								<th>Lower Pitch (0.5X)</th>
+							</tr>
+						</thead>
+						<tbody id = "pitch_control" >
+							
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+		<div style="border-top: 1px solid grey;"></div>
+		<div class="row">
+			<h3>Bonus! SelfVC Finetuned on Celebrity Voices</h3>
+			<p>
+				Finally, we present audio examples from SelfVC finetuned on just a few minutes of speech data from different Celebrities. 
+				Since SelfVC is trained in a text-free manner, we can adapt it for any speaker with only audio data. For this experiment, 
+				we download audio monologues (roughly 5-10 minutes per speaker) for each speaker from Youtube and finetune SelfVC (LibriTTS) on the combined data.
+				We accompany the generated audio with lip-synced video avatars generated from <a href="https://github.com/FuxiVirtualHuman/AAAI22-one-shot-talking-face">One Shot Talking Face</a>
+			</p>
+			<p>
+				We also have a <a href="https://selfspeechsynthesis.github.io/demo.html">live demo</a> where you can upload your own audio and convert it to any of the celebrity voices below.
+			</p>
+			<p>
+				<b>Disclaimer:</b> This demo is for academic and research purposes only. We do not own the rights to the audio or video content used in this demo.
+			</p>
 			<table class="table" style="margin-top: 20px;">
 				<thead>
 					<tr>
-						<th>Conversion Type</th>
 						<th>Source Utterance</th>
 						<th>Target Speaker</th>
-						<th>Same Pitch (1X)</th>
-						<th>Higher Pitch (3X)</th>
-						<th>Lower Pitch (0.5X)</th>
+						<th>SelfVC Generated Audio</th>
 					</tr>
 				</thead>
-				<tbody id = "pitch_control" >
+				<tbody id = "celebrity_table" >
 					
 				</tbody>
 			</table>
 
 		</div>
+
+		
+		
 
 	</div>
 	<hr>
@@ -275,32 +290,45 @@ function fill_audio_table(tbody_id, audio_columns, transcripts, audio_width){
 	
 }
 
-function fill_audio_table_comparison(tbody_id, audio_columns, transcripts, audio_width){
-	var num_rows = audio_columns[0].length;
-	var base_url = "https://expressivecloning.s3.us-east-2.amazonaws.com/AMTEVAL/"
+function fill_celebrity_table(tbody_id, audio_columns, transcripts, audio_width){
+	var num_rows = audio_columns[1].length;
 	for(var ridx=0; ridx < num_rows; ridx++){
 		var tr_string = "<tr>";
 		for(var cidx=0; cidx < audio_columns.length; cidx++){
-			if(cidx > 0){
-				var audio_url = base_url + audio_columns[cidx][ridx];
-				tr_string += '<td><audio class="class_audio" controls="" style="width:'+ audio_width +'px; text-align: center;"><source src="' + audio_url + '" type="audio/wav">Your browser does not support the audio tag</audio>';
-				if(cidx == 1){
+			if(cidx >= 0 && cidx < audio_columns.length - 1){
+				var audio_url = audio_columns[cidx][ridx];
+				// Align audio center vertically
+				tr_string += '<td><audio class="class_audio" controls="" style="width:'+ audio_width +'px; text-align: center; vertical-align: center;"><source src="' + audio_url + '" type="audio/wav">Your browser does not support the audio tag</audio>';
+				if(cidx == 1 && transcripts.length > 0){
 					tr_string += '<details><summary style="cursor: pointer; color: #76b900;">[Show transcript]</summary>' + transcripts[ridx] + '</details>'
 				}
-				tr_string += '</td>';	
+				tr_string += '</td>';
+				
+			}
+			else if (cidx == audio_columns.length - 1){
+				var video_url = audio_columns[cidx][ridx];
+				tr_string += '<td><video class="class_video" controls="" style="width:'+ 200 +'px; text-align: center;"><source src="' + video_url + '" type="video/mp4">Your browser does not support the video tag</video>';
+				tr_string += '</td>';
 			}
 			else{
 				tr_string += '<td style="white-space: nowrap; text-align: left">' + audio_columns[cidx][ridx] + '</td>';
 			}
-			
 		}
 		tr_string += "</tr>";
 		$("#" + tbody_id).append(tr_string);
 	}
-	
 }
 
 var comparison_types_unseen = [
+]
+
+
+var source_names = [
+	"source_30",
+	"source_11",
+	"source_11",
+	"source_30",
+	// "source_150"
 ]
 
 var unseen_transcripts = [
@@ -308,30 +336,20 @@ var unseen_transcripts = [
 	"When quite crisp, they are ready for use.",
 	"Various dishes are frequently ornamented and garnished with its graceful leaves and these are sometimes boiled in soups. Although it is more usually confined to English cookery...",
 	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
-	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
-	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
-	"Going back to camp I procured a light, and after hooping and hallowing for a long time, I heard another groan. This time much louder than before.",
 ]
 
-
-var female_source_utterances = [
-	"source_110",
-	// "source_70"
-]
-
-var male_source_utterances = [
-	"source_140",
-	// "source_150"
-]
-
-var female_target_speakers = [
+var target_names = [
 	"targetspeaker_29",
-	// "targetspeaker_29",
+	"targetspeaker_29",
+	"targetspeaker_34",
+	"targetspeaker_34"
 ]
 
-var male_target_speakers = [
-	"targetspeaker_34",
-	// "targetspeaker_34"
+var comparison_types_unseen = [
+	"Male to Female",
+	"Female to Female",
+	"Female to Male",
+	"Male to Male"
 ]
 
 var source_utterances_unseen = [];
@@ -339,94 +357,47 @@ var target_utterances_unseen = [];
 var mimic_utterances_unseen = [];
 var adapt_utterances_unseen = [];
 
-for(var fti=0; fti < female_target_speakers.length; fti++){
-	for(var fsi=0; fsi < female_source_utterances.length; fsi++){
-		var source = female_source_utterances[fsi]
-		var target = female_target_speakers[fti]
-		var source_path = "SRC_UNSEEN_LIBRI/" + source + ".wav";
-		var target_path = "TARGET_UNSEEN_LIBRI/" + target + ".wav";
-		var mimic_path = "unseenlibri_guidedself/" + source + "_" + target + ".wav";
-		var adapt_path = "unseenlibri_predself/" + source + "_" + target + ".wav";
-		source_utterances_unseen.push(source_path);
-		target_utterances_unseen.push(target_path);
-		mimic_utterances_unseen.push(mimic_path);
-		adapt_utterances_unseen.push(adapt_path);
-		comparison_types_unseen.push("Female To Female");
-	}
-	for(var msi=0; msi < male_source_utterances.length; msi++){
-		var source = male_source_utterances[msi]
-		var target = female_target_speakers[fti]
-		var source_path = "SRC_UNSEEN_LIBRI/" + source + ".wav";
-		var target_path = "TARGET_UNSEEN_LIBRI/" + target + ".wav";
-		var mimic_path = "unseenlibri_guidedself/" + source + "_" + target + ".wav";
-		var adapt_path = "unseenlibri_predself/" + source + "_" + target + ".wav";
-		source_utterances_unseen.push(source_path);
-		target_utterances_unseen.push(target_path);
-		mimic_utterances_unseen.push(mimic_path);
-		adapt_utterances_unseen.push(adapt_path);
-		comparison_types_unseen.push("Male To Female");
-	}
-}
-
-
-for(var mti=0; mti < male_target_speakers.length; mti++){
-	for(var fsi=0; fsi < female_source_utterances.length; fsi++){
-		var source = female_source_utterances[fsi]
-		var target = male_target_speakers[mti]
-		var source_path = "SRC_UNSEEN_LIBRI/" + source + ".wav";
-		var target_path = "TARGET_UNSEEN_LIBRI/" + target + ".wav";
-		var mimic_path = "unseenlibri_guidedself/" + source + "_" + target + ".wav";
-		var adapt_path = "unseenlibri_predself/" + source + "_" + target + ".wav";
-		source_utterances_unseen.push(source_path);
-		target_utterances_unseen.push(target_path);
-		mimic_utterances_unseen.push(mimic_path);
-		adapt_utterances_unseen.push(adapt_path);
-		comparison_types_unseen.push("Female To Male");
-	}
-	for(var msi=0; msi < male_source_utterances.length; msi++){
-		var source = male_source_utterances[msi];
-		var target = male_target_speakers[mti];
-		var source_path = "SRC_UNSEEN_LIBRI/" + source + ".wav";
-		var target_path = "TARGET_UNSEEN_LIBRI/" + target + ".wav";
-		var mimic_path = "unseenlibri_guidedself/" + source + "_" + target + ".wav";
-		var adapt_path = "unseenlibri_predself/" + source + "_" + target + ".wav";
-		source_utterances_unseen.push(source_path);
-		target_utterances_unseen.push(target_path);
-		mimic_utterances_unseen.push(mimic_path);
-		adapt_utterances_unseen.push(adapt_path);
-		comparison_types_unseen.push("Male To Male");
-	}
+for(var idx=0; idx < source_names.length; idx++){
+	var source = source_names[idx]
+	var target = target_names[idx]
+	var source_path = "SRC_UNSEEN_LIBRI/" + source + ".wav";
+	var target_path = "TARGET_UNSEEN_LIBRI/" + target + ".wav";
+	var mimic_path = "unseenlibri_guidedself/" + source + "_" + target + ".wav";
+	var adapt_path = "unseenlibri_predself/" + source + "_" + target + ".wav";
+	source_utterances_unseen.push(source_path);
+	target_utterances_unseen.push(target_path);
+	mimic_utterances_unseen.push(mimic_path);
+	adapt_utterances_unseen.push(adapt_path);
 }
 
 var unseen_columns = [
 	comparison_types_unseen,
 	source_utterances_unseen,
 	target_utterances_unseen,
-	// pitch_pred_utterances_unseen,
 	adapt_utterances_unseen,
 	mimic_utterances_unseen,
 ]
 
 
 var source_utterances_comparison = [
-	"source_110",
+	"source_20",
 	"source_70",
 	"source_140",
-	"source_150"
+	"source_40"
 
 ]
 
 var target_utterances_comparison = [
 	"targetspeaker_29",
-	"targetspeaker_29",
-	"targetspeaker_29",
+	"targetspeaker_23",
+	"targetspeaker_36",
 	"targetspeaker_34",
 ]
 
 var comparison_types = [
+	"Male To Female",
 	"Female To Female",
-	"Female To Female",
-	"Male To Male",
+	"Female To Male",
 	"Male To Male",
 ]
 
@@ -468,7 +439,7 @@ var comparison_columns = [
 
 fill_audio_table("unseen_speakers", unseen_columns,unseen_transcripts, 250)
 // fill_audio_table("seen_speakers", seen_columns, seen_transcripts, 250)
-fill_audio_table_comparison("comparison_table", comparison_columns, comparison_transcripts, 170)
+fill_audio_table("comparison_table", comparison_columns, comparison_transcripts, 130)
 
 var css_source_language_pairs = [
 	["source_00", "chinese"],
@@ -485,15 +456,15 @@ var css_source_language_pairs = [
 
 var english_source_utterances = [
 	"source_110",
+	"source_40",
+	"source_20",
+	"source_70",
+	"source_101",
+	"source_80",
+	"source_21",
+	"source_80",
 	"source_110",
-	"source_110",
-	"source_110",
-	"source_110",
-	"source_140",
-	"source_140",
-	"source_140",
-	"source_140",
-	"source_140",
+	"source_171",
 ]
 
 var css_target_language_pairs = [
@@ -684,6 +655,27 @@ var control_columns = [
 ]
 
 fill_audio_table("pitch_control", control_columns, transcripts_pace_control, 200)
+
+
+var celeb_sources = [
+	"audio/celeb_source1.wav",
+]
+
+var celeb_targets = [
+	"audio/celeb_target1.wav",
+]
+
+var celeb_videos = [
+	"audio/celeb_video1.mp4",
+]
+
+var celebrity_columns = [
+	celeb_sources,
+	celeb_targets,
+	celeb_videos,
+]
+
+fill_celebrity_table("celebrity_table", celebrity_columns, [], 300)
 
 </script>	
 
